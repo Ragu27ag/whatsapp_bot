@@ -1,23 +1,31 @@
 import axios from "axios";
 import express from "express";
+import * as dotenv from "dotenv";
 
 let app = express();
 app.use(express.json());
+dotenv.config();
 
 const token = process.env.TOKEN;
 const mytoken = process.env.MYTOKEN;
+
+console.log("myt", mytoken);
 
 app.listen("5000", () => {
   console.log("app is running");
 });
 
 app.get("/webhook", (req, res) => {
+  console.log("in");
   let mode = req.query["hub.mode"];
   let challange = req.query["hub.challenge"];
   let token = req.query["hub.verify_token"];
+  console.log("tokenn", token, mode);
 
   if (mode && token) {
-    if (mode === "subscribe" && token === mytoken) {
+    console.log("ifff");
+    if (mode == "subscribe" && token == mytoken) {
+      console.log("inside");
       res.status(200).send(challange);
     } else {
       res.status(403);
