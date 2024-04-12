@@ -11,7 +11,7 @@ const mytoken = process.env.MYTOKEN;
 
 console.log("myt", mytoken);
 
-app.listen("5000", () => {
+app.listen(() => {
   console.log("app is running");
 });
 
