@@ -5,13 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run build && npm run watch",
+    "start": "nodemon  dist/index.js",
     "build": "npm run build-ts",
     "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve\"",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
     "serve": "nodemon --inspect=127.0.0.1:9001 dist/index.js"
-
   },
   "author": "",
   "license": "ISC",
@@ -27,7 +26,3 @@
     "nodemon": "^3.1.0"
   }
 }
-
-
-
-  
