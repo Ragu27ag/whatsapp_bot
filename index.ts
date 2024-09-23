@@ -1,17 +1,20 @@
 import axios from "axios";
 import express from "express";
 import * as dotenv from "dotenv";
+dotenv.config();
+import messageRouters from "./src/Router/messageRouter";
+import cors from "cors";
 
 let app = express();
-app.use(express.json());
-dotenv.config();
 
-const token = process.env.TOKEN;
+app.use(express.json());
+app.use(cors());
+
 const mytoken = process.env.MYTOKEN;
 
 console.log("myt", mytoken);
 
-app.listen(() => {
+app.listen(9000, () => {
   console.log("app is running");
 });
 
@@ -33,58 +36,37 @@ app.get("/webhook", (req, res) => {
   }
 });
 
-app.post("/webhook", (req, res) => {
-  //i want some
+app.use("/", messageRouters);
 
-  let body_param = req.body;
 
-  console.log(JSON.stringify(body_param, null, 2));
+// app.post('/webhook', (req, res) => {
+//   console.log('Received a message:', JSON.stringify(req.body, null, 2));
 
-  if (body_param.object) {
-    console.log("inside body param");
-    if (
-      body_param.entry &&
-      body_param.entry[0].changes &&
-      body_param.entry[0].changes[0].value.messages &&
-      body_param.entry[0].changes[0].value.messages[0]
-    ) {
-      let phon_no_id =
-        body_param.entry[0].changes[0].value.metadata.phone_number_id;
-      let from = body_param.entry[0].changes[0].value.messages[0].from;
-      let msg_body = body_param.entry[0].changes[0].value.messages[0].text.body;
+//   // Send a response back to WhatsApp
+//   const messageText = 'Thanks for your message!';
+//   const phon_no_id = '265316890000848';
+//   const token = process.env.TOKEN;
+//   const recipient = req.body.entry[0].changes[0].value.messages[0].from;
 
-      console.log("phone number" + phon_no_id);
-      console.log("from " + from);
-      console.log("boady param " + msg_body);
+//   axios.post(`https://graph.facebook.com/v20.0/${phon_no_id}/messages?access_token=${token}`, {
+//     messaging_product: "whatsapp",
+//     to: recipient,
+//     type: "text",
+//     text: {
+//       body: messageText
+//     }
+//   }, {
+//     headers: {
+//       "Content-Type": "application/json"
+//     }
+//   }).then(response => {
+//     console.log("Response sent successfully:", response.data);
+//   }).catch(error => {
+//     console.error("Error sending response:", error.response ? error.response.data : error.message);
+//   });
 
-      // "build": "tsc",
-      // "start": "nodemon dist/index.js"
-
-      axios({
-        method: "POST",
-        url:
-          "https://graph.facebook.com/v13.0/" +
-          phon_no_id +
-          "/messages?access_token=" +
-          token,
-        data: {
-          messaging_product: "whatsapp",
-          to: from,
-          text: {
-            body: "Hi.. I'm whats app bot, your message is " + msg_body,
-          },
-        },
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      res.sendStatus(200);
-    } else {
-      res.sendStatus(404);
-    }
-  }
-});
+//   res.sendStatus(200);
+// });
 
 app.get("/", (req, res) => {
   res.status(200).send("hello this is webhook setup");
